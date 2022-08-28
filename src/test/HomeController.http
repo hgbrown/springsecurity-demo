@@ -1,0 +1,82 @@
+GET http://localhost:8080/
+Accept: application/json
+
+> {%
+client.test("Can access root endpoint without user", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+
+### Cannot access user endpoint without authorization header
+
+GET http://localhost:8080/user
+Accept: application/json
+
+> {%
+client.test("Cannot access user endpoint without authorization header", function() {
+  client.assert(response.status === 401, "Response status is not 401");
+});
+%}
+
+### Cannot access user endpoint with incorrect role
+
+GET http://localhost:8080/user
+Accept: application/json
+Authorization: Basic YWRtaW46cGFzc3dvcmQ
+
+> {%
+client.test("Cannot access user endpoint with incorrect role", function() {
+  client.assert(response.status === 403, "Response status is not 403");
+});
+%}
+
+### Can access user endpoint with correct role
+
+GET http://localhost:8080/user
+Accept: application/json
+Authorization: Basic dXNlcjpwYXNzd29yZA
+
+> {%
+client.test("Can access user endpoint with correct role", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+
+
+
+### Cannot access admin endpoint without authorization header
+
+GET http://localhost:8080/admin
+Accept: application/json
+
+> {%
+client.test("Cannot access admin endpoint without authorization header", function() {
+  client.assert(response.status === 401, "Response status is not 401");
+});
+%}
+
+### Cannot access admin endpoint with incorrect role
+
+GET http://localhost:8080/admin
+Accept: application/json
+Authorization: Basic dXNlcjpwYXNzd29yZA
+
+> {%
+client.test("Cannot access admin endpoint with incorrect role", function() {
+  client.assert(response.status === 403, "Response status is not 403");
+});
+%}
+
+### Can access admin endpoint with correct role
+
+GET http://localhost:8080/admin
+Accept: application/json
+Authorization: Basic YWRtaW46cGFzc3dvcmQ
+
+> {%
+client.test("Can access admin endpoint with correct role", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
